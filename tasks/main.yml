@@ -14,10 +14,15 @@
 - name: Check git is installed
   yum: name=git
 
+- name: Create repo dir
+  file:
+    name: "{{ egts_kafka_home }}/repo"
+    state: directory
+    
 - name: Add projects repos
   git:
     repo: "{{ egts_kafka_repo }}"
-    dest: "{{ egts_kafka_home }}"
+    dest: "{{ egts_kafka_home }}/repo"
     version: "{{ egts_kafka_version | default(omit) }}"
     key_file: "{{ egts_kafka_key | default(omit) }}"
-  become_user: "{{ egts_kafka_user }}"
+#  become_user: "{{ egts_kafka_user }}"
