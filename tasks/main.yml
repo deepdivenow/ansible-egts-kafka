@@ -1,0 +1,23 @@
+---
+# tasks file for ansible-stdpr-python
+
+- name: Create group "{{ egts_kafka_group }}"
+  group: name="{{ egts_kafka_group }}"
+
+- name: Create user "{{ egts_kafka_user }}"
+  user:
+    name: "{{ egts_kafka_user }}"
+    group: "{{ egts_kafka_group }}"
+    home: "{{ egts_kafka_home }}"
+    comment: egts User
+
+- name: Check git is installed
+  yum: name=git
+
+- name: Add projects repos
+  git:
+    repo: "{{ egts_kafka_repo }}"
+    dest: "{{ egts_kafka_home }}"
+    version: "{{ egts_kafka_version | default(omit) }}"
+    key_file: "{{ egts_kafka_key | default(omit) }}"
+  become_user: "{{ egts_kafka_user }}"

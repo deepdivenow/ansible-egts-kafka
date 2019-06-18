@@ -1,0 +1,7 @@
+---
+# defaults file for ansible-stdpr-python
+egts_kafka_home: '/opt/egts'
+egts_kafka_repo: 'git@bitbucket.org:itsumma/stdpr_python.git'
+egts_kafka_version: '0.1.0'
+egts_kafka_user: 'egts'
+egts_kafka_group: 'egts'
