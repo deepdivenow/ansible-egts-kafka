@@ -18,7 +18,15 @@
   file:
     name: "{{ egts_kafka_home }}/repo"
     state: directory
-    
+
+- name: Create log dir
+  file:
+    name: "{{ egts_kafka_logs }}"
+    state: directory
+    owner: "{{ egts_kafka_user }}"
+    group: "{{ egts_kafka_group }}"
+    mode: 0755
+
 - name: Add projects repos
   git:
     repo: "{{ egts_kafka_repo }}"
@@ -26,3 +34,16 @@
     version: "{{ egts_kafka_version | default(omit) }}"
     key_file: "{{ egts_kafka_key | default(omit) }}"
 #  become_user: "{{ egts_kafka_user }}"
+
+- name: Create service files
+  template:
+    src: "egts_kafka.service.j2"
+    dest: "/etc/systemd/system/egts_kafka_{{ item }}.service"
+  with_items: "{{ egts_kafka_ids }}"
+  notify: [daemon reload, restart egts-kafka]
+
+- meta: flush_handlers
+
+- name: Start and Enable services
+  service: name="egts_kafka_{{ item }}" enabled=True state=started
+  with_items: "{{ egts_kafka_ids }}"

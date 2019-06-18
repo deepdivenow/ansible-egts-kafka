@@ -1,0 +1,13 @@
+[Unit]
+Description=egts_kafka_{{ item }}
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3.6 {{ egts_kafka_home }}/repo/run_egts_kafka.py {{ item }}
+PIDFile=/var/run/egts_kafka_{{ item }}.pid
+User={{ egts_kafka_user }}
+Group={{ egts_kafka_group }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+---
+# handlers file for ansible-stdpr-python
+
+- name: daemon reload
+  systemd: daemon_reload=True
+
+- name: restart egts-kafka
+  systemd: name="egts_kafka_{{ item }}" state=restarted daemon_reload=True
+  with_items: "{{ egts_kafka_ids }}"
