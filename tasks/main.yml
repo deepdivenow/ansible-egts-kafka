@@ -10,6 +10,7 @@
     group: "{{ egts_kafka_group }}"
     home: "{{ egts_kafka_home }}"
     comment: egts User
+    generate_ssh_key: True
 
 - name: Check git is installed
   yum: name=git
