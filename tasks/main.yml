@@ -26,14 +26,30 @@
     owner: "{{ egts_kafka_user }}"
     group: "{{ egts_kafka_group }}"
     mode: 0755
+    
+- name: Add key
+  copy:
+    src: "{{ egts_kafka_repo_key }}"
+    dest: "{{ egts_kafka_home }}/.ssh/{{ egts_kafka_repo_key | basename}}"
+    mode: 0400
+  when: egts_kafka_repo_key is defined and egts_kafka_repo_key | basename not in ["id_rsa","id_dsa"]
+  become_user: "{{ egts_kafka_user }}"
 
-- name: Add projects repos
+- name: Add projects repos with keys
   git:
     repo: "{{ egts_kafka_repo }}"
     dest: "{{ egts_kafka_home }}/repo"
     version: "{{ egts_kafka_version | default(omit) }}"
-    key_file: "{{ egts_kafka_key | default(omit) }}"
-#  become_user: "{{ egts_kafka_user }}"
+    key_file: "{{ egts_kafka_home }}/.ssh/{{ egts_kafka_repo_key | basename }}"
+  when: egts_kafka_repo_key is defined
+  become_user: "{{ egts_kafka_user }}"
+
+- name: Add projects repos without keys
+  git:
+    repo: "{{ egts_kafka_repo }}"
+    dest: "{{ egts_kafka_home }}/repo"
+    version: "{{ egts_kafka_version | default(omit) }}"
+  become_user: "{{ egts_kafka_user }}"
 
 - name: Create service files
   template:
